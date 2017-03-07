@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FTA Portal API Usage Example</title>
+  <!-- External shims and dependencies. Including them here so people don't complain about blocked CDNs. -->
+  <script src="external/es5-shim.min.js"></script>
+  <script src="external/es5-sham.min.js"></script>
+  <script src="external/json3.min.js"></script>
+  <script src="external/es6-shim.min.js"></script>
+  <script src="external/es6-sham.min.js"></script>
+  <script src="external/d3.v4.min.js"></script> 
+  <script src="external/d3-html.js"></script>
+  <script src="external/babel.min.js"></script>
+  <script src="external/marked.min.js"></script>
+  <link rel="stylesheet" href="external/pure-min.css">
+  <link rel="stylesheet" href="external/ribbons.css">
+  <!-- look and feel -->
+  <link rel="stylesheet" href="internal/style.css">
+  <!-- api common stuff -->
+  <script src="internal/style.js" type="text/babel" data-presets="es2015,stage-2"></script>
+  <script src="internal/formula.js" type="text/babel" data-presets="es2015,stage-2"></script>
+  <script src="internal/psr.js" type="text/babel" data-presets="es2015,stage-2"></script>
+  <script src="internal/examples.js" type="text/babel" data-presets="es2015,stage-2"></script>
+  <!-- api example stuff -->
+  <script src="examples/0.common.js" type="text/babel" data-presets="es2015,stage-2"></script>
+  <script src="examples/1.market.js" type="text/babel" data-presets="es2015,stage-2"></script>
+  <script src="examples/2.trade.js" type="text/babel" data-presets="es2015,stage-2"></script>
+  <script src="examples/3.mode.js" type="text/babel" data-presets="es2015,stage-2"></script>
+  <script src="examples/4.search.js" type="text/babel" data-presets="es2015,stage-2"></script>
+  <script src="examples/4.browse.js" type="text/babel" data-presets="es2015,stage-2"></script>
+  <script src="examples/5.product.js" type="text/babel" data-presets="es2015,stage-2"></script>
+  
+</head>
+<body>
+  <div id="header">
+    <a href="https://github.com/ausftas/example-api" target="_blank"><img src="internal/images/aus.png" alt="Clone me on github"></a>
+    <a id="header-github" href="https://github.com/ausftas/example-api" target="_blank"><img src="internal/images/GitHub-Mark-Light-64px.png" alt="Clone me on github"></a>
+    <div class="header-title">
+      <span>API Usage Example</span>
+      <a href="https://ftaportal.dfat.gov.au" target="_blank">Free Trade Agreement Portal</a>
+    </div>
+  </div>
+  <div class="ribbon right red"><a href="https://github.com/AusFTAs/example-api">Clone me on GitHub</a></div>
+  <div id="contents">
+  </div>
+  <div id="footer"></div>
+  <script type="text/babel" data-presets="es2015,stage-2">
+    FTAAPI.startExample();
+  </script>
+</body>
+</html>

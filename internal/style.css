@@ -1,0 +1,146 @@
+#header
+{
+  background: linear-gradient(#3d3935, #1d1915);
+  padding: 0.414em 0.45em 0.414em 0.5em;
+  height: 4em;
+  -webkit-clip-path: polygon(0% 0%, calc(100% - 6.242em) 0%, calc(100% - 4.828em) 1.414em, calc(100% - 3.414em) 0%, calc(100% - 1.414em) 0%, 100% 1.414em, 100% calc(100% - 1.414em), calc(100% - 1.414em) 100%, calc(100% - 3.414em) 100%, calc(100% - 4.828em) calc(100% - 1.414em), calc(100% - 6.242em) 100%, 0% 100%);
+  user-select: none;
+}
+
+#header-github
+{
+  float: right;
+}
+
+#header > a, #header > div
+{
+  height: 4em;
+  display: inline-block;
+}
+
+.header-title a, .header-title span
+{
+  color: white;
+  display: block !important;
+  text-decoration: none;
+}
+
+.header-title span
+{
+  font-size: 2em;
+  font-weight: bold;
+  padding: 0em 1em 0em 0.5em;
+  cursor: default;
+}
+
+.header-title a
+{
+  font-size: 1em;
+  font-weight: bold;
+  padding: 0em 0.5em 0em 1em;
+}
+
+.header-title a:hover
+{
+  color: #3d3935;
+  background: #ddd9d5;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+  margin: 0em 0em 0em 0em;
+  padding: 0em 0em 0em 0em;
+}
+
+#contents
+{
+  border-top: 0.8em solid #f58400;
+  border-bottom: 0.8em solid #f58400;
+  padding: 1em 1em 1em 1em;
+}
+
+#contents>.segment:nth-child(3n-2)
+{
+  background: linear-gradient(#003366, #336699);
+  border: 0.5em solid #003366;
+}
+
+#contents>.segment:nth-child(3n-1)
+{
+  background: #996633;
+  background: linear-gradient(#663300, #996633);
+  border: 0.5em solid #663300;
+}
+
+#contents>.segment:nth-child(3n-3)
+{
+  background: linear-gradient(#336600, #669933);
+  border: 0.5em solid #336600;
+}
+
+#contents>.segment:first-child
+{
+  -webkit-clip-path: polygon(0% 0%,    calc(100% - 2em) 0%, 100% calc(0% + 2em),    100% 100%,   0% 100%);
+}
+
+.segment + .segment
+{
+  margin-top: 1em;
+}
+
+.segment>h2
+{
+  padding: 0.5em;
+  color: white;
+  user-select: none;
+  cursor: default;
+}
+
+.segment>div
+{
+  padding: 0.5em;
+  background-color: white;
+}
+
+.segment>div>h2
+{
+  padding-top: 1em;
+  padding-bottom: 0.25em;
+}
+
+td {
+  vertical-align: top;
+}
+
+.link:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+
+.expanded:hover, .expandable:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.expandable:before { 
+  content: "+ ";
+}
+
+tr.expandable:before, div.expandable:before {
+  display: none;
+}
+
+.expanded:before { 
+  content: "- ";
+}
+
+tr.expanded:before, div.expanded:before { 
+  display: none;
+}
+
+
+.pure-button-warning {
+  background: rgb(223, 117, 20);
+  color: white;
+}
