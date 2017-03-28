@@ -10,11 +10,11 @@ FTAAPI.registerSegment('4.browse.js', 4, function (FTA, SOURCE, LEVEL)
       let agreements = [];
       if (country === "AUS")
       {
-        agreements = FTA.hierarchy["I"].countryAgreements.filter(ca => ca.country === FTA.tradeMarket);
+        agreements = FTA.hierarchy["I"].countryAgreements.filter(ca => ca.country === FTA.tradeMarket).map(ca => ca.agreement);
       }
       else
       {
-        agreements = FTA.hierarchy["I"].countryAgreements.filter(ca => ca.country === FTA.targetCountry);
+        agreements = FTA.hierarchy["I"].countryAgreements.filter(ca => ca.country === FTA.targetCountry).map(ca => ca.agreement);
       }
       return '[' +
         FTA.hierarchy[hscode].countryAgreements.filter(ca => ca.country === country && agreements.indexOf(ca.agreement) !== -1)
