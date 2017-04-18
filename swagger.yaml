@@ -236,20 +236,18 @@ paths:
         please refer to the tariffs example source
         code https://github.com/AusFTAs/example-api-tariffs
       parameters:
-        - name: agreement
+        - $ref: '#/definitions/AgreementAcronym'
+          name: agreement
           in: path
           description: Input Agreement
           required: true
           type: string
-          enum:
-            $ref: '#/definitions/AgreementAcronym/enum'
-        - name: country
+        - $ref: '#/definitions/CountryAcronym/enum'
+          name: country
           in: path
           description: Input Country
           required: true
           type: string
-          enum:
-            $ref: '#/definitions/CountryAcronym/enum'
         - name: heading
           in: path
           description: Four digit HS heading.
