@@ -1,0 +1,701 @@
+swagger: '2.0'
+info:
+  title:
+    Department of Foreign Affairs and Trade (DFAT) Free Trade Agreement (FTA)
+    Portal Interactive Application Programming Interface (API) Documentation
+  description:
+    This interactive API documentation provides a list of available API calls for
+    accessing data served by the DFAT FTA Portal. It contains formatting
+    instructions for input requests as well as output format. This is to be used
+    in conjunction with any other supporting software, guidelines and examples
+    provided. <br /><br />
+
+    Visit http://ausftas.github.io/api for more details. <br /><br />
+
+    Domain specific concepts are not explained in this documentation.
+    Please refer to the existing site help topics
+    (https://ftaportal.dfat.gov.au/help/first-time) to familiarise yourself with
+    these. Please keep principles of YAGNI, KISS, GIGO and DRY in
+    mind while interpreting this document.
+  version: v2
+  termsOfService: 'http://ausftas.github.io/api/#Disclaimer'
+  contact:
+    url: 'http://ausftas.github.io/api/#Feedback_and_Support'
+host: api.ftaportal.dfat.gov.au
+basePath: /api/v2/json
+schemes:
+    - https
+produces:
+  - application/json
+tags:
+  - name: version
+    description: Version information.
+  - name: search
+    description: Harmonised System (HS) item search.
+  - name: tariffs
+    description: Harmonised System (HS) tariffs data access.
+responses:
+  default:
+    description: Error of any kind.
+paths:
+  /version:
+    get:
+      summary: API Data Version
+      description:
+        Returns version of API data.
+        This reflects the latest time anything has been updated. This will be
+        greater than or equal to any other versions presented at any time.
+        <br /><br />
+        
+        Note that this is not the API version. This is the API data version.
+      responses:
+        '200':
+          description: Requested information.
+          schema:
+            type: object
+            properties:
+              results:
+                $ref: '#/definitions/Version'
+              deprecated:
+                $ref: '#/definitions/DeprecatedMessage'
+            required:
+              - results
+        default:
+          $ref: '#/responses/default'
+      tags:
+        - version
+  '/search/{keywords}':
+    get:
+      summary: Search
+      description:
+        Returns search results of specified keywords.<br /><br />
+        
+        One or more keywords are necessary to perform search. Performing
+        search will return a list of 0 or more search results depending on
+        matches. Results are identified by their HS code ("item" field).
+        Currently, it returns 4 digit HS headings. Items of higher levels can
+        be inferred
+        from this information. Further details of results can be found
+        in /tariffs/hierarchy.<br /><br />
+        
+        For an example of how to perform search and interpret its results,
+        please refer to the search example source
+        code https://github.com/AusFTAs/example-api-search
+      parameters:
+        - name: keywords
+          in: path
+          description:
+            Input keywords should be
+            lowercase with non-alphanumeric characters removed and joined
+            using the + character. Non-alphanumeric characters are not indexed
+            and specifying them will yield in returning less results.
+            <br /><br />
+
+            Maximum 14 keywords are allowed. Input validation and user
+            interaction will depend on user interface implementation so is not
+            done in the service outside the scope of security.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Requested information.
+          schema:
+            type: object
+            properties:
+              results:
+                $ref: '#/definitions/SearchResults'
+              deprecated:
+                $ref: '#/definitions/DeprecatedMessage'
+            required:
+              - results
+        default:
+          $ref: '#/responses/default'
+      tags:
+        - search
+  /tariffs/hierarchy:
+    get:
+      summary: HS Hierarchy
+      description:
+        Returns data associated with the first three levels of the HS hierarchy.
+        <br /><br />
+
+        I.e. sections, chapters and headings. These are the common sets of
+        information that does not change unless there is a HS version update and
+        does not vary across agreements and countries. This is provided
+        separately with the intent that they are cached and and used as
+        necessary.
+        <br /><br />
+
+        Information of these levels are not returned with any other API calls.
+        <br /><br />
+        
+        For an example of how to interpret this,
+        please refer to the hierarchy example source
+        code https://github.com/AusFTAs/example-api-hierarchy
+      responses:
+        '200':
+          description: Requested information.
+          schema:
+            type: object
+            properties:
+              results:
+                $ref: '#/definitions/Hierarchy'
+              deprecated:
+                $ref: '#/definitions/DeprecatedMessage'
+            required:
+              - results
+        default:
+          $ref: '#/responses/default'
+      tags:
+        - tariffs
+  /tariffs/agreements:
+    get:
+      summary: Agreements List
+      description: 
+        Returns a list of agreements by their acronym. This will also contain
+        agreement specific data of countries, rules of origin information and
+        all other agreement specific information that does not relate to
+        specific products. <br /><br />
+        
+        Product specific details can be found under /tariffs/heading/*. Common
+        information provided here is not repeated elsewhere. E.g. tariff
+        schedule dates which are the same for all products under an agreement
+        may only be provided here unless there are product specific exceptions.
+        I.e. This information is to be combined with product specific
+        information.
+      responses:
+        '200':
+          description: Requested information.
+          schema:
+            type: object
+            properties:
+              results:
+                $ref: '#/definitions/AgreementsList'
+              deprecated:
+                $ref: '#/definitions/DeprecatedMessage'
+            required:
+              - results
+        default:
+          $ref: '#/responses/default'
+      tags:
+        - tariffs
+  /tariffs/agreement/{agreement}:
+    get:
+      summary: Agreement Data
+      description: 
+        Returns a list of agreements by their acronym. This will also contain
+        agreement specific data of countries, rules of origin information and
+        all other agreement specific information that does not relate to
+        specific products. <br /><br />
+        
+        Product specific details can be found under /tariffs/heading/*. Common
+        information provided here is not repeated elsewhere. E.g. tariff
+        schedule dates which are the same for all products under an agreement
+        may only be provided here unless there are product specific exceptions.
+        I.e. This information is to be combined with product specific
+        information.
+      parameters:
+        - $ref: '#/definitions/AgreementAcronym'
+          name: agreement
+          in: path
+          description: Input Agreement
+          required: true
+      responses:
+        '200':
+          description: Requested information.
+          schema:
+            type: object
+            properties:
+              results:
+                $ref: '#/definitions/Agreement'
+              deprecated:
+                $ref: '#/definitions/DeprecatedMessage'
+            required:
+              - results
+        default:
+          $ref: '#/responses/default'
+      tags:
+        - tariffs
+  '/tariffs/{country}/{agreement}/heading/{heading}':
+    get:
+      summary: All subheading data of a heading.
+      description:
+        Returns tariffs data for items related to a heading. These data will
+        only  relate to 5+ digit HS codes. For information on 4 or less digit HS
+        codes, refer to hierarchy and agreements. <br /><br />
+
+        Although up to 6 digit codes are defined in the HS standard, their
+        presence and the number of sub levels tend to be country specific.
+        <br /><br />
+        
+        All tariff information about a product is returned. This includes
+        tariffs hierarchy, rates, quota, safeguard, product specific rules and
+        anything else that is specific to these products.<br /><br />
+        
+        For an example of how to interpret this,
+        please refer to the tariffs example source
+        code https://github.com/AusFTAs/example-api-tariffs
+      parameters:
+        - name: agreement
+          in: path
+          description: Input Agreement
+          required: true
+          type: string
+          enum:
+            $ref: '#/definitions/AgreementAcronym/enum'
+        - name: country
+          in: path
+          description: Input Country
+          required: true
+          type: string
+          enum:
+            $ref: '#/definitions/CountryAcronym/enum'
+        - name: heading
+          in: path
+          description: Four digit HS heading.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Requested information.
+          schema:
+            type: object
+            properties:
+              results:
+                $ref: '#/definitions/HSHeadingData'
+              deprecated:
+                $ref: '#/definitions/DeprecatedMessage'
+            required:
+              - results
+        default:
+          $ref: '#/responses/default'
+      tags:
+        - tariffs
+definitions:
+  SearchResults:
+    type: object
+    properties:
+      keywords:
+        type: array
+        items:
+          type: string
+      products:
+        description: A list of products matching search keyword. E.g. if there was a typo or something.
+        type: array
+        items:
+          $ref: '#/definitions/SearchResultsItem'
+      alternateKeywords:
+        type: array
+        description: A list of alternate keyword suggestions. E.g. if there was a typo or something.
+        items:
+          type: string
+  SearchResultsItem:
+    type: object
+    properties:
+      hscode:
+        type: string
+        description:
+          HS Code identifier of the product. Only 4+ digit HS codes are returned.
+          Data associated with 4- digits exist in /tariffs/hierarchy.
+          Detailed data associated with 5+ digits exist in
+          /tariffs/{country}/{agreement}/heading/{heading}.
+      country:
+        type: string
+        description: Optional country code this product relates to. Only set for 5+ digit results.
+      agreement:
+        type: string
+        description: Optional agreement code this product relates to. Only set for 5+ digit results.
+      matches:
+        title: Encoded match against keywords list.
+        type: integer
+        format: int32
+        description:
+          This relates individual results to the input keywords entered.
+          Bit map of keywords. 1 bit per keyword from LSB to MSB in input
+          order.
+      mode:
+        type: integer
+        format: int32
+        description:
+          Experimental feature reserved for future use.
+      score:
+        title: Results score.
+        type: integer
+        format: int32
+        description:
+          This is a discrete measure of how relevant we think the
+          item is given the input keywords.
+          Higher value means better match.
+          Note that this metric is for ordering results only
+          and should not be interpreted as a measure of probability or
+          search relevancy.
+    required:
+      - hscode
+      - matches
+      - score
+      - mode
+  Hierarchy:
+    type: object
+    properties:
+      '{section or chapter or heading HS code}':
+        type: object
+        required:
+          - type
+          - description
+        properties:
+          item:
+            type: string
+            description:
+              Deprecated. Will not be in future versions of the API or beyond February 2017,
+              whichver comes first.
+          type:
+            type: string
+            description:
+              Type of item. 'section', 'chapter' or 'heading'.
+            enum:
+              - section
+              - chapter
+              - heading
+          description:
+            type: string
+            description: Free text description of item.
+          countries:
+            type: array
+            description:
+              Deprecated. Will not be in future versions of the API or beyond February 2017,
+              whichver comes first. Use countryAgreements instead.
+              A list of countries which have data for this item.
+              Only filled for headings.
+            items:
+              $ref: '#/definitions/CountryAcronym'
+          agreements:
+            type: array
+            description:
+              Deprecated. Will not be in future versions of the API or beyond February 2017,
+              whichver comes first. Use countryAgreements instead.
+              A list of agreements which have data for this item.
+              Only filled for headings.
+            items:
+              $ref: '#/definitions/AgreementAcronym'
+          countryAgreements:
+            type: array
+            description:
+              A list of countries and agreements which have data for this item. Also includes high level summaries of items.
+            items:
+              $ref: '#/definitions/CountryAgreementSummary'
+          chapterStart:
+            description:
+              First sub chapter of this section.
+              Only filled for sections.
+            type: string
+          chapterEnd:
+            type: string
+            description:
+              Last sub chapter of this section.
+              Only filled for sections.
+  HSHeadingData:
+    type: object
+    properties:
+      '{hs code}':
+        type: object
+        required:
+          - description
+        properties:
+          description:
+            type: string
+            description: Free Text Description of this item.
+          tariffs:
+            $ref: '#/definitions/Tariffs'
+  Tariffs:
+    type: object
+    description:
+      Tariffs Data.<br /><br />
+
+      Everything below this level is optional and is only present if they are
+      applicable. 
+    properties:
+      dates:
+        type: array
+        description:
+          Agreement year start. E.g. first element is the agreement start date,
+          second element is the start date of year 2 of the agreement etc.
+          Dates should be in ISO8601 format. I.e. YYYY-MM-DD.
+        items:
+          type: string
+      seasonal:
+        type: object
+        description:
+          Optional seasonality information associated with an item. Should not
+          be present for items for which seasonality does not apply. Presence
+          of this field implies that all the tariffs information in the parent
+          object is subject to the specified seasonal constraints. Off season
+          rates are to be represented as another season.
+        properties:
+          start:
+            $ref: '#/definitions/MonthDay'
+          end:
+            $ref: '#/definitions/MonthDay'
+        required:
+          - start
+          - end
+      productSpecificRules:
+        $ref: '#/definitions/ProductSpecificRules'
+      default:
+        type: object
+        description:
+          This is the in quota non-safeguard triggered tariff rates.
+        properties:
+          baseRate:
+            $ref: '#/definitions/Formula'
+          rates:
+            $ref: '#/definitions/FormulaList'
+          notes:
+            $ref: '#/definitions/Notes'
+          options:
+            $ref: '#/definitions/TariffPropertyOptions'
+      quota:
+        type: object
+        description:
+          This is the quota information. I.e. quota quantities and rates that
+          apply if the aggregate import quantity exceeds that quantity.
+        properties:
+          quantity:
+            $ref: '#/definitions/FormulaList'
+          rates:
+            $ref: '#/definitions/FormulaList'
+          notes:
+            $ref: '#/definitions/Notes'
+          options:
+            $ref: '#/definitions/TariffPropertyOptions'
+      safeguard:
+        type: object
+        description:
+          This is the safeguard information. I.e. safeguard quantities and rates
+          that will apply if safeguard is triggered after import quantity
+          exceeds said quantity.
+        properties:
+          quantity:
+            $ref: '#/definitions/FormulaList'
+          rates:
+            $ref: '#/definitions/FormulaList'
+          notes:
+            $ref: '#/definitions/Notes'
+          options:
+            $ref: '#/definitions/TariffPropertyOptions'
+      wtoQuota:
+        type: object
+        description:
+          This will be present if WTO quota also applies to this item.
+          This is only a text note.
+        properties:
+          notes:
+            $ref: '#/definitions/Notes'
+  TariffPropertyOptions:
+    type: object
+    properties:
+      explanation:
+        type: string
+        description:
+          Additional explanation that apply to an item with a particular
+          trendType.
+          Assume empty if not set.
+      showData:
+        type: boolean
+        description:
+          Whether to show the data of an item with a particular trendType.
+          Assume true if not set.
+  AgreementsList:
+    type: object
+    description:
+      List of agreements by their acronym.
+    properties:
+      '{agreement accronym}':
+        type: object
+        properties:
+          agreementAcronym:
+            $ref: '#/definitions/AgreementAcronym'
+          agreementFullName:
+            type: string
+            description:
+              Free text agreement name.
+          countries:
+            type: object
+            properties:
+              '{country acronym}':
+                type: object
+                properties:
+                  countryAcronym:
+                    $ref: '#/definitions/CountryAcronym'
+                  countryFullName:
+                    type: string
+                    description:
+                      Free text country name.
+  Agreement:
+    type: object
+    properties:
+      agreementAcronym:
+        $ref: '#/definitions/AgreementAcronym'
+      agreementFullName:
+        type: string
+        description:
+          Free text agreement name.
+      countries:
+        type: object
+        properties:
+          '{country acronym}':
+            type: object
+            properties:
+              countryAcronym:
+                $ref: '#/definitions/CountryAcronym'
+              countryFullName:
+                type: string
+                description:
+                  Free text country name.
+              tariffs:
+                $ref: '#/definitions/Tariffs'
+      rulesOfOrigin:
+        $ref: '#/definitions/RulesOfOrigin'
+  RulesOfOrigin:
+    type: array
+    description:
+      A list of question categories, questions and outcomes that make up the
+      rules of origin questionnaire template.<br /><br />
+      
+      This rules of origin template is used in conjunction with the product
+      specific rules to come up with a set of questionnaire for users. Answers to
+      these questionnaire (yes / no) determine whether a product will receive
+      preferential tariff treatment
+      under the free trade agreement. Depending on which questions are answered
+      and their answers, at any time, the outcome of this assessment is either
+      'applicable,' 'inapplicable,' or 'unclear.'
+    items:
+      type: object
+      properties:
+        type:
+          type: string
+          description:
+            This is 'category', 'question' or 'outcome' depending on what is
+            being described.
+          enum:
+            - category
+            - question
+            - outcome
+        parentCategory:
+          type: string
+          description:
+            This should be set for questions. The category under which this
+            question should be displayed.
+        itemIf:
+          type: string
+          description:
+            For category, this is the identifier for the category.
+            For questions, this is the product specific rules code for which
+            this question applies.
+            For outcomes, this is one of the following - 'applicable' for the
+            applicable outcome, 'inapplicable' for the inapplicable outcome and
+            'unsure' for the unsure outcomes.
+        itemText:
+          type: string
+          description:
+            Expansion of what itemIf means. E.g. if itemIf is CC, this could say
+            Change in Chapter.
+        hideItemCode:
+          type: boolean
+          description:
+            This flag, only for categories, determines if item codes, e.g. "CC",
+            should be displayed for product specific rules that apply under it.
+        label:
+          type: string
+          description:
+            Label associated with this item. I.e. the question or the category
+            heading.
+        details:
+          type: string
+          description:
+            Detailed explanation text associated with this item. This is offered
+            as explanation text to categories or as "tell me more" text in
+            questions.
+  CountryAcronym:
+    title: Country Identifier
+    description: ISO 3166-1 Alpha-3 country codes. Use all capital letters.
+    type: string
+    enum:
+      - AUS
+      - BRN
+      - CHN
+      - IDN
+      - JPN
+      - KHM
+      - KOR
+      - LAO
+      - MYS
+      - NZL
+      - PHL
+      - SGP
+      - THA
+      - VNM
+  AgreementAcronym:
+    title: Identifier for agreement.
+    description: Use official acronyms from DFAT website.
+    type: string
+    enum:
+      - AANZFTA
+      - ANZCERTA
+      - ChAFTA
+      - JAEPA
+      - KAFTA
+      - MAFTA
+      - SAFTA
+      - TAFTA
+  CountryAgreementSummary:
+    title: Country Agreement Summary
+    type: object
+    properties:
+      country:
+        $ref: '#/definitions/CountryAcronym'
+      agreement:
+        $ref: '#/definitions/AgreementAcronym'
+      '.*':
+        title: Summary Flag
+        type: boolean
+  Formula:
+    title: Formula
+    type: string
+    description:
+      Formula is a consistent encoding for various tariff expressions and
+      quantities for machine use. It must be string that follows a
+      specific grammar. The grammar and
+      an example implementation can be found
+      at https://github.com/AusFTAs/tariff-formula#grammar
+  Notes:
+    type: string
+  FormulaList:
+    type: array
+    description:
+      Formula list is used where the formula varies based on dates.
+    items:
+      $ref: '#/definitions/Formula'
+  MonthDay:
+    type: string
+    description: MM-DD representing month and day of year.
+  ProductSpecificRules:
+    title: Product Specific Rules
+    type: string
+    description:
+      Product specific rules are item specific implicit or explicit
+      rules that apply to products. This is a consistent method for encoding
+      these for machine use. It must be string that follows a specific grammar.
+      The grammar and
+      an example implementation can be found
+      at https://github.com/AusFTAs/tariff-psroo#grammar
+  Version:
+    type: string
+    description:
+      Versions are dates of format YYYYMMDDHHMM corresponding to time of update.
+  DeprecatedMessage:
+    title: Optional deprecation message.
+    type: string
+    description:
+      Message provided when API is deprecated. This property (intended for 
+      system developers) will only exist if this version of the API is
+      deprecated.
