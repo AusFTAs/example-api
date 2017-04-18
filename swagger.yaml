@@ -242,7 +242,7 @@ paths:
           description: Input Agreement
           required: true
           type: string
-        - $ref: '#/definitions/CountryAcronym/enum'
+        - $ref: '#/definitions/CountryAcronym'
           name: country
           in: path
           description: Input Country
