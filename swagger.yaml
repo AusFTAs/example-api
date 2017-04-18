@@ -195,11 +195,22 @@ paths:
         I.e. This information is to be combined with product specific
         information.
       parameters:
-        - $ref: '#/definitions/AgreementAcronym'
-          name: agreement
+        - name: agreement
           in: path
           description: Input Agreement
           required: true
+          type: string
+          # NOTE: Please update all the other instances as well as it is
+          # impossible to share the enum in swagger 2 spec with params.
+          enum:
+            - AANZFTA
+            - ANZCERTA
+            - ChAFTA
+            - JAEPA
+            - KAFTA
+            - MAFTA
+            - SAFTA
+            - TAFTA
       responses:
         '200':
           description: Requested information.
@@ -236,18 +247,44 @@ paths:
         please refer to the tariffs example source
         code https://github.com/AusFTAs/example-api-tariffs
       parameters:
-        - $ref: '#/definitions/AgreementAcronym'
-          name: agreement
+        - name: agreement
           in: path
           description: Input Agreement
           required: true
           type: string
-        - $ref: '#/definitions/CountryAcronym'
-          name: country
+          # NOTE: Please update all the other instances as well as it is
+          # impossible to share the enum in swagger 2 spec with params.
+          enum:
+            - AANZFTA
+            - ANZCERTA
+            - ChAFTA
+            - JAEPA
+            - KAFTA
+            - MAFTA
+            - SAFTA
+            - TAFTA
+        - name: country
           in: path
           description: Input Country
           required: true
           type: string
+          # NOTE: Please update all the other instances as well as it is
+          # impossible to share the enum in swagger 2 spec with params.
+          enum:
+            - AUS
+            - BRN
+            - CHN
+            - IDN
+            - JPN
+            - KHM
+            - KOR
+            - LAO
+            - MYS
+            - NZL
+            - PHL
+            - SGP
+            - THA
+            - VNM
         - name: heading
           in: path
           description: Four digit HS heading.
@@ -617,6 +654,8 @@ definitions:
     title: Country Identifier
     description: ISO 3166-1 Alpha-3 country codes. Use all capital letters.
     type: string
+    # NOTE: Please update all the other instances as well as it is
+    # impossible to share the enum in swagger 2 spec with params.
     enum:
       - AUS
       - BRN
@@ -636,6 +675,8 @@ definitions:
     title: Identifier for agreement.
     description: Use official acronyms from DFAT website.
     type: string
+    # NOTE: Please update all the other instances as well as it is
+    # impossible to share the enum in swagger 2 spec with params.
     enum:
       - AANZFTA
       - ANZCERTA
